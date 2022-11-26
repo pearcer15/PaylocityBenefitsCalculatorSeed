@@ -10,5 +10,6 @@ namespace Api.Repositories.Interfaces
         Task<bool> AddEmployee(Employee employee);
         Task<bool> UpdateEmployee(int Id, Employee employee);
         Task<bool> DeleteEmployee(int Id);
+        Task<IEnumerable<int>> GetDependentIds(int EmployeeId);
     }
 }

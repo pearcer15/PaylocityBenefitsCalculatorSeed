@@ -13,8 +13,8 @@ namespace Api.Controllers
     {
         private EmployeesService _employeesService;
         
-        public EmployeesController() { 
-            _employeesService = new EmployeesService();
+        public EmployeesController(EmployeesService employeesService) { 
+            _employeesService = employeesService;
         }
 
 

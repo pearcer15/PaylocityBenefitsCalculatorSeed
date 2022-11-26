@@ -10,5 +10,19 @@ namespace Api.Dtos.Employee
         public decimal Salary { get; set; }
         public DateTime DateOfBirth { get; set; }
         public ICollection<GetDependentDto> Dependents { get; set; } = new List<GetDependentDto>();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="employee"></param>
+        public GetEmployeeDto(Models.Employee employee)
+        {
+            Id = employee.Id;
+            FirstName = employee.FirstName;
+            LastName = employee.LastName;
+            Salary = employee.Salary;
+            DateOfBirth = employee.DateOfBirth;
+            Dependents = employee.Dependents.Select(d => new GetDependentDto(d)).ToList();
+        }
     }
 }

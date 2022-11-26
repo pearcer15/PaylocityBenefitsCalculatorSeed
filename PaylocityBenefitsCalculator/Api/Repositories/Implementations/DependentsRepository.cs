@@ -1,13 +1,21 @@
-﻿using Api.Models;
+﻿using Api.Database;
+using Api.Models;
 using Api.Repositories.Interfaces;
+using System.Linq;
 
 namespace Api.Repositories.Implementations
 {
     public class DependentsRepository : IDependentsRepository
     {
+        private DependentsTable _dependentsTable;
+        
+        public DependentsRepository(DependentsTable dependentsTable) {
+            _dependentsTable = dependentsTable;
+        }
+        
         public async Task<Dependent> GetDependentById(int id)
         {
-            throw new NotImplementedException();
+            return _dependentsTable.dependents.FirstOrDefault(d => d.Id == id);
         }
 
         public async Task<IEnumerable<Dependent>> GetAllDependents()
