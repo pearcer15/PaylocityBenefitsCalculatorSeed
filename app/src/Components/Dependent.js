@@ -1,4 +1,4 @@
-import { currencyFormat } from "../Utilities/Constants";
+import AddDependentModal from './Modals/AddDependentModal';
 
 const Dependent = (props) => {
     const firstName = props.firstName || '';
