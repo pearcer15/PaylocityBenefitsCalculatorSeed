@@ -15,28 +15,92 @@ namespace Api.Services
 
         public async Task<GetDependentDto> GetDependentById(int id)
         {
-            throw new NotImplementedException();
+            Dependent dependent = await _dependentsRepository.GetDependentById(id);
+            return new GetDependentDto(dependent);
         }
 
         public async Task<IEnumerable<GetDependentDto>> GetAllDependents()
         {
-            throw new NotImplementedException();
+            IEnumerable<Dependent> dependents =  await _dependentsRepository.GetAllDependents();
+            return dependents.Select(d => new GetDependentDto(d));
         }
 
-        public async Task<AddDependentWithEmployeeIdDto> AddDependent(AddDependentWithEmployeeIdDto dependent)
+        public async Task<IEnumerable<AddDependentWithEmployeeIdDto>> AddDependent(AddDependentWithEmployeeIdDto dependent)
         {
-            throw new NotImplementedException();
+            if (await DependentRelationshipAllowed(dependent.Relationship, dependent.EmployeeId))
+            {
+                int newId = await _dependentsRepository.GetNewDependentId();
+                if (await _dependentsRepository.AddDependent(new Dependent(dependent, newId)))
+                {
+                    return new List<AddDependentWithEmployeeIdDto> { dependent };
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            else
+            {
+                throw new Exception();
+            }
         }
 
         public async Task<GetDependentDto> UpdateDependent(int Id, UpdateDependentDto dependent)
         {
-            throw new NotImplementedException();
+            Dependent dependentToUpdate = await _dependentsRepository.GetDependentById(Id);
+            dependentToUpdate.EmployeeId = await GetEmployeeIdForDependent(dependentToUpdate.Id);
+            if (await DependentRelationshipAllowed(dependent.Relationship, dependentToUpdate.EmployeeId))
+            {
+                dependentToUpdate.UpdateDependent(dependent);
+                if (await _dependentsRepository.UpdateDependent(Id, dependentToUpdate))
+                {
+                    return new GetDependentDto(dependentToUpdate);
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+            else
+            {
+                throw new Exception();
+            }
+        }
+
+        private async Task<int> GetEmployeeIdForDependent(int id)
+        {
+            return await _dependentsRepository.GetEmployeeIdForDependent(id);
         }
 
         public async Task<IEnumerable<GetDependentDto>> DeleteDependent(int Id)
         {
-            throw new NotImplementedException();
+            if (await _dependentsRepository.DeleteDependent(Id))
+            {
+                return await GetAllDependents();
+            }
+            else
+            {
+                throw new Exception();
+            }
         }
 
+        public async Task<bool> DependentRelationshipAllowed(Relationship relationship, int employeeId)
+        {
+           if (relationship == Relationship.Child) { return true; }
+           else if (relationship == Relationship.None) { return false; }
+           else {
+                ICollection<Dependent> dependents = await GetDependentsByEmployeeId(employeeId);
+                return dependents?.Count > 0 ? !dependents.Any(d => d.Relationship == Relationship.DomesticPartner || d.Relationship == Relationship.Spouse) : true;
+           }
+        }
+
+        public async Task<ICollection<Dependent>> GetDependentsByEmployeeId(int employeeId)
+        {
+            IEnumerable<int> dependentIds = await _dependentsRepository.GetDependentIds(employeeId);
+            var dependentTask = dependentIds.Select(id => _dependentsRepository.GetDependentById(id)).ToList();
+            ICollection<Dependent> dependents = await Task.WhenAll(dependentTask);
+            dependents.ToList().ForEach(d => d.EmployeeId = employeeId);
+            return dependents;
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Api.Dtos.Dependent;
-using Api.Dtos.Employee;
+﻿using Api.Dtos.Employee;
 using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +21,15 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ApiResponse<GetEmployeeDto>>> Get(int id)
         {
-            throw new NotImplementedException();
+            GetEmployeeDto employee = await _employeesService.GetEmployeeById(id);
+
+            var result = new ApiResponse<GetEmployeeDto>
+            {
+                Data = employee,
+                Success = true
+            };
+
+            return result;
         }
 
         [SwaggerOperation(Summary = "Get all employees")]
@@ -43,22 +50,46 @@ namespace Api.Controllers
         [SwaggerOperation(Summary = "Add employee")]
         [HttpPost]
         public async Task<ActionResult<ApiResponse<List<AddEmployeeDto>>>> AddEmployee(AddEmployeeDto newEmployee)
-        { 
-            throw new NotImplementedException();
+        {
+            IEnumerable<AddEmployeeDto> employees = await _employeesService.AddEmployee(newEmployee);
+
+            var result = new ApiResponse<List<AddEmployeeDto>>
+            {
+                Data = employees.ToList(),
+                Success = true
+            };
+
+            return result;
         }
 
         [SwaggerOperation(Summary = "Update employee")]
         [HttpPut("{id}")]
         public async Task<ActionResult<ApiResponse<GetEmployeeDto>>> UpdateEmployee(int id, UpdateEmployeeDto updatedEmployee)
         {
-            throw new NotImplementedException();
+            GetEmployeeDto employee = await _employeesService.UpdateEmployee(id, updatedEmployee);
+            
+            var result = new ApiResponse<GetEmployeeDto>
+            {
+                Data = employee,
+                Success = true
+            };
+
+            return result;
         }
 
         [SwaggerOperation(Summary = "Delete employee")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<ApiResponse<List<GetEmployeeDto>>>> DeleteEmployee(int id)
         {
-            throw new NotImplementedException();
+            IEnumerable<GetEmployeeDto> employees = await _employeesService.DeleteEmployee(id);
+
+            var result = new ApiResponse<List<GetEmployeeDto>>
+            {
+                Data = employees.ToList(),
+                Success = true
+            };
+
+            return result;
         }
     }
 }
