@@ -1,4 +1,4 @@
-import { currencyFormat } from "./Constants";
+import { currencyFormat } from "../Utilities/Constants";
 
 const Employee = (props) => {
     const firstName = props.firstName || '';

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import Employee from './Employee';
-import { baseUrl } from './Constants';
-import AddEmployeeModal from './AddEmployeeModal';
+import Employee from './Components/Employee';
+import { baseUrl } from './Utilities/Constants';
+import AddEmployeeModal from './Components/Modals/AddEmployeeModal';
 
 const EmployeeListing = () => {
     const [employees, setEmployees] = useState([]);
