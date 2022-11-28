@@ -1,5 +1,5 @@
 import React from 'react';
-import EditDependentModal from './Modals/EditDependentModal';
+import AddDependentModal from './Modals/AddDependentModal';
 import DeleteModal from "./Modals/DeleteModal";
 import { relationshipFormat } from '../Utilities/Constants';
 import { deleteRecord } from "../Utilities/ApiService";
@@ -53,7 +53,7 @@ class Dependent extends React.Component {
             <td>{this.props.dateOfBirth}</td>
             <td>{relationshipFormat(this.props.relationship)}</td>
             <td>
-                <EditDependentModal
+                <AddDependentModal
                 data={this.props}
                 IsModalOpen={this.state.editOpen}
                 onCloseModal={this.handleCloseEditModal}

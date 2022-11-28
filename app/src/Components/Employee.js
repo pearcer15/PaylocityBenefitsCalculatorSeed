@@ -1,7 +1,7 @@
 import React from "react";
 import { currencyFormat } from "../Utilities/Constants";
 import { deleteRecord } from "../Utilities/ApiService";
-import EditEmployeeModal from "./Modals/EditEmployeeModal";
+import AddEmployeeModal from "./Modals/AddEmployeeModal";
 import DeleteModal from "./Modals/DeleteModal";
 
 class Employee extends React.Component {
@@ -55,7 +55,7 @@ class Employee extends React.Component {
             </td>
             <td>{this.props.dependents?.length || 0}</td>
             <td>
-                <EditEmployeeModal
+                <AddEmployeeModal
                 data={this.props}
                 IsModalOpen={this.state.editOpen}
                 onCloseModal={this.handleCloseEditModal}

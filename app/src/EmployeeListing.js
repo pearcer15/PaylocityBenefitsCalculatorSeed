@@ -9,7 +9,7 @@ class EmployeeListing extends React.Component {
         this.state = {
             employees: [],
             error: null,
-            addEmployeeModalId: "add-employee-modal"
+            addOpen: false
         }
     }
     componentDidMount = () => {
@@ -32,6 +32,17 @@ class EmployeeListing extends React.Component {
         }})
     };
 
+    openAddModal = () => {
+        this.setState({
+         addOpen: true
+        })
+     }
+ 
+     handleCloseAddModal = () => {
+         this.setState({
+             addOpen: false
+         })
+     } 
 
     render() {
 
@@ -65,10 +76,12 @@ class EmployeeListing extends React.Component {
                 ))}
             </tbody>
         </table>
-        <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target={`#${this.state.addEmployeeModalId}`}>Add Employee</button>
         <AddEmployeeModal
-            id={this.state.addEmployeeModalId}
-            />
+            data={[]}
+            IsModalOpen={this.state.addOpen}
+            onCloseModal={this.handleCloseAddModal}
+        />
+        <button type="button" className="btn btn-primary" onClick={this.openAddModal} >Add Employee</button>
     </div>
     );
     }
