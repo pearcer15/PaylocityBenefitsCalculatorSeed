@@ -57,6 +57,7 @@ class Employee extends React.Component {
             <td>
                 <AddEmployeeModal
                 data={this.props}
+                editMode={true}
                 IsModalOpen={this.state.editOpen}
                 onCloseModal={this.handleCloseEditModal}
                 />

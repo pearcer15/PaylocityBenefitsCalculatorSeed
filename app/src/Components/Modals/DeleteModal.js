@@ -1,11 +1,11 @@
 import Modal from 'react-modal';
 
 function DeleteModal (props) {
-    function onCancel(event) {
+    function onCancel() {
         props.onCloseModal(false);
     }
 
-    function onDelete(event) {
+    function onDelete() {
         props.onCloseModal(true)
     }
 

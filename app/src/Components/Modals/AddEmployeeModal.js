@@ -2,18 +2,26 @@ import Dependent from '../Dependent';
 import AddDependentModal from './AddDependentModal';
 import Modal from 'react-modal';
 import React from 'react';
+import { currencyFormat } from '../../Utilities/Constants';
+import { addRecord, editRecord } from '../../Utilities/ApiService';
 
 class AddEmployeeModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            dependents: this.props.data?.dependents?.length > 0 ? this.props.data.dependents : [],
-            addOpen: false
-        }
+            addOpen: false,
+            firstName: this.props.data.firstName || '',
+            lastName: this.props.data.lastName || '',
+            salary: this.props.data.salary || 0,
+            dateOfBirth: this.props.data.dateOfBirth || '2000-01-01',
+            dependents: this.props.data.dependents || []
+            };
+
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    onModalClose = (event) => {
-        this.props.onCloseModal(event);
+    onModalClose = () => {
+        this.props.onCloseModal(false);
     }
 
     openAddModal = () => {
@@ -26,7 +34,41 @@ class AddEmployeeModal extends React.Component {
          this.setState({
              addOpen: false
          })
-     } 
+     }
+
+     handleChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+     }
+
+     handleSubmit = () =>  {
+        if(this.props.editMode) {
+            editRecord(true, this.editEmployee());
+        } else{
+            addRecord(true, this.addEmployee());
+        }
+        this.props.onCloseModal(true);
+     }
+
+     addEmployee = () => {
+        return {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            salary: this.state.salary,
+            dateOfBirth: this.state.dateOfBirth,
+            dependents: this.state.dependents
+        };
+     }
+
+     editEmployee = () => {
+        return {
+            id: this.props.data.id,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            salary: this.state.salary
+        }
+ }
 
      render() {
     return (
@@ -38,7 +80,24 @@ class AddEmployeeModal extends React.Component {
             <h1>Add/Edit Employee</h1>
             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.onModalClose}></button>
             <div>
-                {this.props.data.firstName}
+                <form>
+                    <label>
+                        First Name:
+                        <input type="text" name="firstName" value={this.state.firstName} onChange={this.handleChange} />
+                    </label>
+                    <label>
+                        Last Name:
+                        <input type="text" name="lastName" value={this.state.lastName} onChange={this.handleChange} />
+                    </label>
+                    <label>
+                        Salary $:
+                        <input type="number" name="salary" value={this.state.salary} min="1" onChange={this.handleChange} />
+                    </label>
+                    <label>
+                        Date of Birth:
+                        <input disabled={this.props.editMode} type="date" name="dateOfBirth" value={this.state.dateOfBirth} onChange={this.handleChange} />
+                    </label>
+
             <table className="table caption-top">
                 <caption>Dependents</caption>
                 <thead className="table-dark">
@@ -66,14 +125,17 @@ class AddEmployeeModal extends React.Component {
             </table>
             <AddDependentModal
                 data={[]}
+                editMode={false}
+                employeeId={this.props.data.id}
                 IsModalOpen={this.state.addOpen}
                 onCloseModal={this.handleCloseAddModal}
             />
             <button type="button" className="btn btn-primary" onClick={this.openAddModal}>Add Dependent</button>
+            </form>
             </div>
             <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={this.onModalClose}>Close</button>
-                <button type="button" className="btn btn-primary">Save changes</button>
+                <button type="button" className="btn btn-primary" onClick={this.handleSubmit}>Save changes</button>
             </div>
         </Modal>
         </div>

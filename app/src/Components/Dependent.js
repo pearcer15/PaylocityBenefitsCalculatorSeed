@@ -55,12 +55,14 @@ class Dependent extends React.Component {
             <td>
                 <AddDependentModal
                 data={this.props}
+                editMode={true}
                 IsModalOpen={this.state.editOpen}
                 onCloseModal={this.handleCloseEditModal}
                 />
                   <button type="button" className="btn btn-primary" onClick={this.openEditModal}>Edit</button>
                 <DeleteModal
                 data={this.props}
+                employeeId={this.props.employeeId}
                 IsModalOpen={this.state.deleteOpen}
                 onCloseModal={this.handleCloseDeleteModal}
                 />

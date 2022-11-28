@@ -1,28 +1,94 @@
+import React from 'react';
 import Modal from 'react-modal';
+import { addRecord, editRecord } from '../../Utilities/ApiService';
 
-function AddDependentModal(props) {
-    function onModalClose(event) {
-        props.onCloseModal(event);
+class AddDependentModal extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            firstName: this.props.data.firstName || '',
+            lastName: this.props.data.lastName || '',
+            dateOfBirth: this.props.data.dateOfBirth || null,
+            relationship: this.props.data.relationship || null
+        }
     }
 
+    onModalClose = (event) => {
+        this.props.onCloseModal(event);
+    }
+    handleChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+     }
+     handleSubmit = () =>  {
+        if(this.props.editMode) {
+            editRecord(false, this.editDependent());
+        } else{
+            addRecord(false, this.addDependent());
+        }
+        this.props.onCloseModal(true);
+     }
+
+     addDependent = () => {
+        return {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            dateOfBirth: this.state.dateOfBirth,
+            relationship: this.state.relationship,
+            employeeId: this.props.EmployeeId,
+        };
+     }
+
+     editDependent = () => {
+        return {
+            id: this.props.data.id,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            dateOfBirth: this.state.dateOfBirth,
+            relationship: this.state.relationship,
+        }
+ }
+
+
+    render() {
     return (
         <div>
         <Modal
-            isOpen={props.IsModalOpen}
+            isOpen={this.props.IsModalOpen}
             ariaHideApp={false}
         >
             <h1>Add/Edit Dependent</h1>
-            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={onModalClose}></button>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={this.onModalClose}></button>
             <div>
-                {props.data.firstName}
+            <form>
+                    <label>
+                        First Name:
+                        <input type="text" name="firstName" value={this.state.firstName} onChange={this.handleChange} />
+                    </label>
+                    <label>
+                        Last Name:
+                        <input type="text" name="lastName" value={this.state.lastName} onChange={this.handleChange} />
+                    </label>
+                    <label>
+                        Date of Birth:
+                        <input type="date" name="dateOfBirth" value={this.state.dateOfBirth} onChange={this.handleChange} />
+                    </label>
+                    <select name="relationship" value={this.state.relationship} onChange={this.handleChange} >
+                        <option value="1">Spouse</option>
+                        <option value="2">Domestic Partner</option>
+                        <option value="3">Child</option>
+                    </select>
+            </form>
             </div>
             <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={onModalClose}>Close</button>
-                <button type="button" className="btn btn-primary">Save changes</button>
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={this.onModalClose}>Close</button>
+                <button type="button" className="btn btn-primary"  onClick={this.handleSubmit}>Save changes</button>
             </div>
         </Modal>
         </div>
-    )
+    );
+    }
 }
 
 export default AddDependentModal;

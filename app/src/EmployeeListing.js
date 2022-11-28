@@ -35,14 +35,14 @@ class EmployeeListing extends React.Component {
     openAddModal = () => {
         this.setState({
          addOpen: true
-        })
-     }
+        });
+    }
  
-     handleCloseAddModal = () => {
+    handleCloseAddModal = () => {
          this.setState({
              addOpen: false
          })
-     } 
+    }
 
     render() {
 
@@ -78,6 +78,7 @@ class EmployeeListing extends React.Component {
         </table>
         <AddEmployeeModal
             data={[]}
+            editMode={false}
             IsModalOpen={this.state.addOpen}
             onCloseModal={this.handleCloseAddModal}
         />
