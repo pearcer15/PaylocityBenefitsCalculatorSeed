@@ -1,12 +1,14 @@
 import React from "react";
 import { currencyFormat } from "../Utilities/Constants";
-import AddEmployeeModal from "./Modals/EditEmployeeModal";
+import EditEmployeeModal from "./Modals/EditEmployeeModal";
+import DeleteModal from "./Modals/DeleteModal";
 
 class Employee extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             editOpen: false,
+            deleteOpen: false,
         };
         this.firstName = this.props.firstName || '';
         this.lastName = this.props.lastName || '';
@@ -18,9 +20,21 @@ class Employee extends React.Component {
        })
     }
 
-    handleCloseModal(){
+    handleCloseEditModal = () => {
         this.setState({
             editOpen: false
+        })
+    }
+
+    openDeleteModal = () => {
+        this.setState({
+            deleteOpen: true
+        })
+    }
+
+    handleCloseDeleteModal = () => {
+        this.setState({
+            deleteOpen: false
         })
     }
     
@@ -31,17 +45,25 @@ class Employee extends React.Component {
             <td>{this.lastName}</td>
             <td>{this.firstName}</td>
             <td>{this.props.dateOfBirth}</td>
-            <td>{currencyFormat(this.salary)}</td>
+            <td>
+                {currencyFormat(this.salary)}
+
+            </td>
             <td>{this.props.dependents?.length || 0}</td>
             <td>
-                <AddEmployeeModal
+                <EditEmployeeModal
                 data={this.props}
                 IsModalOpen={this.state.editOpen}
-                onCloseModal={this.handleCloseModal}
+                onCloseModal={this.handleCloseEditModal}
                 />
-                  <button onClick={this.openEditModal}>Edit</button>
+                  <button type="button" className="btn btn-primary" onClick={this.openEditModal}>Edit</button>
+                <DeleteModal
+                data={this.props}
+                IsModalOpen={this.state.deleteOpen}
+                onCloseModal={this.handleCloseDeleteModal}
+                />
+                  <button type="button" className="btn btn-warn" onClick={this.openDeleteModal}>Delete</button>
             </td>
-            <td><a href="#">Delete</a></td>
         </tr>
     );
     }
