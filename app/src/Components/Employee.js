@@ -1,5 +1,6 @@
 import React from "react";
 import { currencyFormat } from "../Utilities/Constants";
+import { deleteRecord } from "../Utilities/ApiService";
 import EditEmployeeModal from "./Modals/EditEmployeeModal";
 import DeleteModal from "./Modals/DeleteModal";
 
@@ -32,10 +33,13 @@ class Employee extends React.Component {
         })
     }
 
-    handleCloseDeleteModal = () => {
+    handleCloseDeleteModal = (completeDelete) => {
         this.setState({
             deleteOpen: false
         })
+        if(completeDelete){
+            deleteRecord(true, this.props.id);
+        }
     }
     
     render(){

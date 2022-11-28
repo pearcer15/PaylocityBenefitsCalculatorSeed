@@ -2,6 +2,7 @@ import React from 'react';
 import EditDependentModal from './Modals/EditDependentModal';
 import DeleteModal from "./Modals/DeleteModal";
 import { relationshipFormat } from '../Utilities/Constants';
+import { deleteRecord } from "../Utilities/ApiService";
 
 class Dependent extends React.Component {
     constructor(props) {
@@ -33,10 +34,14 @@ class Dependent extends React.Component {
          })
      }
  
-     handleCloseDeleteModal = () => {
-         this.setState({
-             deleteOpen: false
-         })
+     handleCloseDeleteModal = (completeDelete) => {
+        this.setState({
+            deleteOpen: false
+        })
+        if(completeDelete){
+            deleteRecord(false, this.props.id);
+        }
+
      } 
 
     render() {
