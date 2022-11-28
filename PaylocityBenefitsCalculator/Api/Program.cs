@@ -42,6 +42,7 @@ builder.Services.AddScoped<IEmployeesRepository, EmployeesRepository>();
 
 builder.Services.AddScoped<DependentsService>();
 builder.Services.AddScoped<EmployeesService>();
+builder.Services.AddScoped<PayrollService>();
 
 var app = builder.Build();
 

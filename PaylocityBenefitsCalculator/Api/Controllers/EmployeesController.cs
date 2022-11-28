@@ -1,4 +1,5 @@
 ﻿using Api.Dtos.Employee;
+using Api.Dtos.Payroll;
 using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,11 @@ namespace Api.Controllers
     public class EmployeesController : ControllerBase
     {
         private EmployeesService _employeesService;
+        private PayrollService _payrollService;
         
-        public EmployeesController(EmployeesService employeesService) { 
+        public EmployeesController(EmployeesService employeesService, PayrollService payrollService) { 
             _employeesService = employeesService;
+            _payrollService = payrollService;
         }
 
 
@@ -86,6 +89,22 @@ namespace Api.Controllers
             var result = new ApiResponse<List<GetEmployeeDto>>
             {
                 Data = employees.ToList(),
+                Success = true
+            };
+
+            return result;
+        }
+
+        //If there were more payroll actions I'd consider making another Controller
+        [SwaggerOperation(Summary = "Get paystub for an employee")]
+        [HttpGet("{id}/Paystub")]
+        public async Task<ActionResult<ApiResponse<GetPaystubDto>>> GetPaystub(int id)
+        {
+            GetPaystubDto paystub = await _payrollService.GetPaystub(id);
+
+            var result = new ApiResponse<GetPaystubDto>
+            {
+                Data = paystub,
                 Success = true
             };
 
