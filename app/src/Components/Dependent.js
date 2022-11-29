@@ -2,7 +2,7 @@ import React from 'react';
 import AddDependentModal from './Modals/AddDependentModal';
 import DeleteModal from "./Modals/DeleteModal";
 import { relationshipFormat } from '../Utilities/Constants';
-import { dependentsUrl, fetchDelete, fetchPut } from "../Utilities/ApiService";
+import { dependentsUrl, fetchPut } from "../Utilities/ApiService";
 
 class Dependent extends React.Component {
     constructor(props) {

@@ -40,7 +40,6 @@ class EmployeeListing extends React.Component {
  
     handleCloseAddModal = (reply) => {
         if(reply) {
-            console.log(reply);
             fetchPost(`${employeesUrl}`, reply)
             .then((response) => {
                 var newEmployeeList = this.state.employees.concat(response.data);

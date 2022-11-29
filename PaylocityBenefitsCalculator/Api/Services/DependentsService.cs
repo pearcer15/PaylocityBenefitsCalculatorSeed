@@ -88,7 +88,7 @@ namespace Api.Services
             }
         }
 
-        //Need to rewrite this for editing
+        //This should definitely get tested
         public async Task<bool> DependentRelationshipAllowed(Relationship relationship, int employeeId, int? updateId = -1)
         {
            if (relationship == Relationship.Child) { return true; }

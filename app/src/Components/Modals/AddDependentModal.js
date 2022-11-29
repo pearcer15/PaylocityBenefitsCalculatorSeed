@@ -1,6 +1,5 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { dependentsUrl, fetchPut } from '../../Utilities/ApiService';
 
 class AddDependentModal extends React.Component {
     constructor(props) {
@@ -73,6 +72,7 @@ class AddDependentModal extends React.Component {
                         Date of Birth:
                         <input type="date" name="dateOfBirth" value={this.state.dateOfBirth} onChange={this.handleChange} />
                     </label>
+                    {/* ideally limit this to child if there is already a spouse/domestic partner on the employee */}
                     <select name="relationship" value={this.state.relationship} onChange={this.handleChange} >
                         <option value="1">Spouse</option>
                         <option value="2">Domestic Partner</option>

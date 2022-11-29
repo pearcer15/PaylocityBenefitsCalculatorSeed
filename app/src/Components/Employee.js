@@ -1,6 +1,6 @@
 import React from "react";
 import { currencyFormat } from "../Utilities/Constants";
-import { employeesUrl, fetchDelete, fetchGet, fetchPut } from "../Utilities/ApiService";
+import { employeesUrl, fetchGet, fetchPut } from "../Utilities/ApiService";
 import AddEmployeeModal from "./Modals/AddEmployeeModal";
 import DeleteModal from "./Modals/DeleteModal";
 import PaycheckModal from "./Modals/PaycheckModal";

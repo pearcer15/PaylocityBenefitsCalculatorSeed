@@ -2,7 +2,6 @@ import Dependent from '../Dependent';
 import AddDependentModal from './AddDependentModal';
 import Modal from 'react-modal';
 import React from 'react';
-import { currencyFormat } from '../../Utilities/Constants';
 import { dependentsUrl, fetchDelete, fetchPost } from '../../Utilities/ApiService';
 
 class AddEmployeeModal extends React.Component {
