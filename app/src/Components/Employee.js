@@ -17,6 +17,7 @@ class Employee extends React.Component {
             lastName: this.props.lastName || '',
             salary: this.props.salary || 0,
             dependents: this.props.dependents || [],
+            dateOfBirth: this.props.dateOfBirth.split("T")[0],
         };
   
     }
@@ -77,7 +78,7 @@ class Employee extends React.Component {
         }
     }
 
-    handleDependentDeleted = (dependentArray) => {
+    handleDependentsChanged = (dependentArray) => {
         this.setState({
             dependents: dependentArray
         })
@@ -89,7 +90,7 @@ class Employee extends React.Component {
             <th scope="row">{this.props.id}</th>
             <td>{this.state.lastName}</td>
             <td>{this.state.firstName}</td>
-            <td>{this.props.dateOfBirth}</td>
+            <td>{this.state.dateOfBirth}</td>
             <td>
                 {currencyFormat(this.state.salary)}
                 <PaycheckModal
@@ -106,7 +107,7 @@ class Employee extends React.Component {
                 editMode={true}
                 IsModalOpen={this.state.editOpen}
                 onCloseModal={this.handleCloseEditModal}
-                dependentDeleted={this.handleDependentDeleted}
+                dependentsChanged={this.handleDependentsChanged}
                 />
                   <button type="button" className="btn btn-primary" onClick={this.openEditModal}>Edit</button>
                 <DeleteModal

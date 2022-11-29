@@ -12,7 +12,7 @@ class Dependent extends React.Component {
             deleteOpen: false,
             firstName: this.props.firstName || '',
             lastName: this.props.lastName || '',
-            dateOfBirth: this.props.dateOfBirth || '',
+            dateOfBirth: this.props.dateOfBirth?.split("T")[0] || '',
             relationship: this.props.relationship || 0,
         };
 
@@ -31,7 +31,7 @@ class Dependent extends React.Component {
                 this.setState({
                     firstName: response.data.firstName,
                     lastName: response.data.lastName,
-                    dateOfBirth: response.data.dateOfBirth,
+                    dateOfBirth: response.data.dateOfBirth.split("T")[0],
                     relationship: response.data.relationship
                 })
             })

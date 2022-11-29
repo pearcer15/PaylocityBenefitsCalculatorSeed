@@ -13,7 +13,7 @@ class AddEmployeeModal extends React.Component {
             firstName: this.props.data.firstName || '',
             lastName: this.props.data.lastName || '',
             salary: this.props.data.salary || 0,
-            dateOfBirth: this.props.data.dateOfBirth || '2000-01-01',
+            dateOfBirth: this.props.data.dateOfBirth?.split("T")[0] || '2000-01-01',
             dependents: this.props.data.dependents || []
             };
 
@@ -32,12 +32,12 @@ class AddEmployeeModal extends React.Component {
  
      handleCloseAddModal = (reply) => {
         if(reply) {
-            console.log(reply);
             fetchPost(`${dependentsUrl}`, reply)
             .then((response) => {
                 this.setState({
                     dependents: response.data
                 })
+                this.props.dependentsChanged(response.data)
             })
         }
         this.setState({
@@ -83,7 +83,7 @@ class AddEmployeeModal extends React.Component {
            this.setState({
                dependents: response.data
            })
-           this.props.dependentDeleted(response.data)
+           this.props.dependentsChanged(response.data)
        })
     }
 

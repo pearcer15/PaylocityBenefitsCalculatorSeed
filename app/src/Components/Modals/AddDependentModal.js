@@ -8,13 +8,13 @@ class AddDependentModal extends React.Component {
         this.state = {
             firstName: this.props.data.firstName || '',
             lastName: this.props.data.lastName || '',
-            dateOfBirth: this.props.data.dateOfBirth || '2000-01-01',
-            relationship: this.props.data.relationship || 1
+            dateOfBirth: this.props.data.dateOfBirth?.split("T")[0] || '2000-01-01',
+            relationship: this.props.data.relationship || 3,
         }
     }
 
-    onModalClose = (event) => {
-        this.props.onCloseModal(event);
+    onModalClose = () => {
+        this.props.onCloseModal(false);
     }
 
     handleChange = (event) => {
