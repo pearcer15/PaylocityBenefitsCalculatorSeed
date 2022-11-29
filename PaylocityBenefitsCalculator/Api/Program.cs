@@ -1,3 +1,7 @@
+using Api.Database;
+using Api.Repositories.Implementations;
+using Api.Repositories.Interfaces;
+using Api.Services;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,8 +28,21 @@ builder.Services.AddCors(options =>
         policy  =>
         {
             policy.WithOrigins("http://localhost:3000", "http://localhost");
+            policy.AllowAnyMethod();
+            policy.AllowAnyHeader();
         });
 });
+
+builder.Services.AddSingleton<DependentEmployeeJoinTable>();
+builder.Services.AddSingleton<DependentsTable>();
+builder.Services.AddSingleton<EmployeesTable>();
+
+builder.Services.AddScoped<IDependentsRepository, DependentsRepository>();
+builder.Services.AddScoped<IEmployeesRepository, EmployeesRepository>();
+
+builder.Services.AddScoped<DependentsService>();
+builder.Services.AddScoped<EmployeesService>();
+builder.Services.AddScoped<PayrollService>();
 
 var app = builder.Build();
 
