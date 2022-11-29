@@ -3,7 +3,7 @@ import AddDependentModal from './AddDependentModal';
 import Modal from 'react-modal';
 import React from 'react';
 import { currencyFormat } from '../../Utilities/Constants';
-import { employeesUrl, fetchPost, fetchPut } from '../../Utilities/ApiService';
+import { dependentsUrl, fetchDelete, fetchPost } from '../../Utilities/ApiService';
 
 class AddEmployeeModal extends React.Component {
     constructor(props) {
@@ -30,10 +30,20 @@ class AddEmployeeModal extends React.Component {
         })
      }
  
-     handleCloseAddModal = () => {
-         this.setState({
+     handleCloseAddModal = (reply) => {
+        if(reply) {
+            console.log(reply);
+            fetchPost(`${dependentsUrl}`, reply)
+            .then((response) => {
+                var newDependentsList = this.state.dependents?.length > 0 ? this.state.employees.concat(response.data[0]) : [response.data[0]];
+                this.setState({
+                    dependents: newDependentsList
+                })
+            })
+        }
+        this.setState({
              addOpen: false
-         })
+        })
      }
 
      handleChange = (event) => {
@@ -44,11 +54,10 @@ class AddEmployeeModal extends React.Component {
 
      handleSubmit = () =>  {
         if(this.props.editMode) {
-            fetchPut(`${employeesUrl}/${this.props.data.id}`, this.editEmployee());
+            this.props.onCloseModal(this.editEmployee());
         } else{
-            fetchPost(`${employeesUrl}`, this.addEmployee());
+            this.props.onCloseModal(this.addEmployee());
         }
-        this.props.onCloseModal(true);
      }
 
      addEmployee = () => {
@@ -68,6 +77,16 @@ class AddEmployeeModal extends React.Component {
             salary: this.state.salary
         }
  }
+
+    handleDelete = (id) => {
+       fetchDelete(`${dependentsUrl}/${id}`)
+       .then((response) => {
+           this.setState({
+               dependents: response.data
+           })
+           this.props.dependentDeleted(response.data)
+       })
+    }
 
      render() {
     return (
@@ -116,8 +135,9 @@ class AddEmployeeModal extends React.Component {
                     id={id}
                     firstName={firstName}
                     lastName={lastName}
-                    dateOfBirth={dateOfBirth.split("T")[0]}
+                    dateOfBirth={dateOfBirth}
                     relationship={relationship}
+                    deleted={this.handleDelete}
                     />
                     ))}
                 </tbody>

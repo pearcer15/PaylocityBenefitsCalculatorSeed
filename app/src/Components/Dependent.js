@@ -2,7 +2,7 @@ import React from 'react';
 import AddDependentModal from './Modals/AddDependentModal';
 import DeleteModal from "./Modals/DeleteModal";
 import { relationshipFormat } from '../Utilities/Constants';
-import { dependentsUrl, fetchDelete } from "../Utilities/ApiService";
+import { dependentsUrl, fetchDelete, fetchPut } from "../Utilities/ApiService";
 
 class Dependent extends React.Component {
     constructor(props) {
@@ -10,10 +10,12 @@ class Dependent extends React.Component {
         this.state = {
             editOpen: false,
             deleteOpen: false,
+            firstName: this.props.firstName || '',
+            lastName: this.props.lastName || '',
+            dateOfBirth: this.props.dateOfBirth || '',
+            relationship: this.props.relationship || 0,
         };
 
-        this.firstName = this.props.firstName || '';
-        this.lastName = this.props.lastName || '';
     };
 
     openEditModal = () => {
@@ -22,11 +24,22 @@ class Dependent extends React.Component {
         })
      }
  
-     handleCloseEditModal = () => {
-         this.setState({
+    handleCloseEditModal = (reply) => {
+        if(reply){
+            fetchPut(`${dependentsUrl}/${this.props.id}`, reply)
+            .then((response) => {
+                this.setState({
+                    firstName: response.data.firstName,
+                    lastName: response.data.lastName,
+                    dateOfBirth: response.data.dateOfBirth,
+                    relationship: response.data.relationship
+                })
+            })
+        }
+        this.setState({
              editOpen: false
-         })
-     }
+        })
+    }
  
      openDeleteModal = () => {
          this.setState({
@@ -39,7 +52,7 @@ class Dependent extends React.Component {
             deleteOpen: false
         })
         if(completeDelete){
-            fetchDelete(`${dependentsUrl}/${this.props.id}`);
+            this.props.deleted(this.props.id);
         }
 
      } 
@@ -48,10 +61,10 @@ class Dependent extends React.Component {
     return (
         <tr>
             <th scope="row">{this.props.id}</th>
-            <td>{this.lastName}</td>
-            <td>{this.firstName}</td>
-            <td>{this.props.dateOfBirth}</td>
-            <td>{relationshipFormat(this.props.relationship)}</td>
+            <td>{this.state.lastName}</td>
+            <td>{this.state.firstName}</td>
+            <td>{this.state.dateOfBirth}</td>
+            <td>{relationshipFormat(this.state.relationship)}</td>
             <td>
                 <AddDependentModal
                 data={this.props}

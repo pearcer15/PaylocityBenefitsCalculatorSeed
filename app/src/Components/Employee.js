@@ -1,6 +1,6 @@
 import React from "react";
 import { currencyFormat } from "../Utilities/Constants";
-import { employeesUrl, fetchDelete, fetchGet } from "../Utilities/ApiService";
+import { employeesUrl, fetchDelete, fetchGet, fetchPut } from "../Utilities/ApiService";
 import AddEmployeeModal from "./Modals/AddEmployeeModal";
 import DeleteModal from "./Modals/DeleteModal";
 import PaycheckModal from "./Modals/PaycheckModal";
@@ -13,10 +13,11 @@ class Employee extends React.Component {
             deleteOpen: false,
             paycheckOpen: false,
             paycheck: [],
+            firstName: this.props.firstName || '',
+            lastName: this.props.lastName || '',
+            salary: this.props.salary || 0,
+            dependents: this.props.dependents || [],
         };
-        this.firstName = this.props.firstName || '';
-        this.lastName = this.props.lastName || '';
-        this.salary = this.props.salary || 0;
   
     }
 
@@ -45,7 +46,17 @@ class Employee extends React.Component {
        })
     }
 
-    handleCloseEditModal = () => {
+    handleCloseEditModal = (reply) => {
+        if(reply){
+            fetchPut(`${employeesUrl}/${this.props.id}`, reply)
+            .then((response) => {
+                this.setState({
+                    firstName: response.data.firstName,
+                    lastName: response.data.lastName,
+                    salary: response.data.salary
+                })
+            })
+        }
         this.setState({
             editOpen: false
         })
@@ -62,19 +73,25 @@ class Employee extends React.Component {
             deleteOpen: false
         })
         if(completeDelete){
-            fetchDelete(`${employeesUrl}/${this.props.id}`);
+            this.props.deleted(this.props.id);
         }
+    }
+
+    handleDependentDeleted = (dependentArray) => {
+        this.setState({
+            dependents: dependentArray
+        })
     }
     
     render(){
     return (
         <tr>
             <th scope="row">{this.props.id}</th>
-            <td>{this.lastName}</td>
-            <td>{this.firstName}</td>
+            <td>{this.state.lastName}</td>
+            <td>{this.state.firstName}</td>
             <td>{this.props.dateOfBirth}</td>
             <td>
-                {currencyFormat(this.salary)}
+                {currencyFormat(this.state.salary)}
                 <PaycheckModal
                 data={this.state.paycheck}
                 IsModalOpen={this.state.paycheckOpen}
@@ -82,13 +99,14 @@ class Employee extends React.Component {
                 />
                 <button type="button" className="btn btn-primary" onClick={this.openPaycheckModal}>View Paystub</button>
             </td>
-            <td>{this.props.dependents?.length || 0}</td>
+            <td>{this.state.dependents?.length || 0}</td>
             <td>
                 <AddEmployeeModal
                 data={this.props}
                 editMode={true}
                 IsModalOpen={this.state.editOpen}
                 onCloseModal={this.handleCloseEditModal}
+                dependentDeleted={this.handleDependentDeleted}
                 />
                   <button type="button" className="btn btn-primary" onClick={this.openEditModal}>Edit</button>
                 <DeleteModal

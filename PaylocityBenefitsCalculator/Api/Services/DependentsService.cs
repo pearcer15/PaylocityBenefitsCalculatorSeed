@@ -49,7 +49,7 @@ namespace Api.Services
         {
             Dependent dependentToUpdate = await _dependentsRepository.GetDependentById(Id);
             dependentToUpdate.EmployeeId = await GetEmployeeIdForDependent(dependentToUpdate.Id);
-            if (await DependentRelationshipAllowed(dependent.Relationship, dependentToUpdate.EmployeeId))
+            if (await DependentRelationshipAllowed(dependent.Relationship, dependentToUpdate.EmployeeId, Id))
             {
                 dependentToUpdate.UpdateDependent(dependent);
                 if (await _dependentsRepository.UpdateDependent(Id, dependentToUpdate))
@@ -74,9 +74,12 @@ namespace Api.Services
 
         public async Task<IEnumerable<GetDependentDto>> DeleteDependent(int Id)
         {
+            int employeeId = await GetEmployeeIdForDependent(Id);
+            
             if (await _dependentsRepository.DeleteDependent(Id))
             {
-                return await GetAllDependents();
+                IEnumerable<Dependent> dependents = await GetDependentsByEmployeeId(employeeId);
+                return dependents.Select(d => new GetDependentDto(d));
             }
             else
             {
@@ -84,13 +87,14 @@ namespace Api.Services
             }
         }
 
-        public async Task<bool> DependentRelationshipAllowed(Relationship relationship, int employeeId)
+        //Need to rewrite this for editing
+        public async Task<bool> DependentRelationshipAllowed(Relationship relationship, int employeeId, int? updateId = -1)
         {
            if (relationship == Relationship.Child) { return true; }
            else if (relationship == Relationship.None) { return false; }
            else {
                 ICollection<Dependent> dependents = await GetDependentsByEmployeeId(employeeId);
-                return dependents?.Count > 0 ? !dependents.Any(d => d.Relationship == Relationship.DomesticPartner || d.Relationship == Relationship.Spouse) : true;
+                return dependents?.Count > 0 ? !dependents.Where(dep => dep.Id != updateId).Any(d => d.Relationship == Relationship.DomesticPartner || d.Relationship == Relationship.Spouse) : true;
            }
         }
 

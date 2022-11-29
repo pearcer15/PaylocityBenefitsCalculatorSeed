@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { AddDependent, dependentsUrl, fetchPost, fetchPut } from '../../Utilities/ApiService';
+import { dependentsUrl, fetchPut } from '../../Utilities/ApiService';
 
 class AddDependentModal extends React.Component {
     constructor(props) {
@@ -25,19 +25,10 @@ class AddDependentModal extends React.Component {
 
     handleSubmit = () =>  {
         if(this.props.editMode) {
-            fetchPut(`${dependentsUrl}/${this.props.data.id}`, this.editDependent())
-            .then((response) => {
-                if (response.success) {
-                    console.log(response.data);
-            }});
+            this.props.onCloseModal(this.editDependent());
         } else{
-            fetchPost(`${dependentsUrl}`, this.addDependent())
-            .then((response) => {
-                if (response.success) {
-                    console.log(response.data);
-            }});
+            this.props.onCloseModal(this.addDependent());
         }
-        this.props.onCloseModal(true);
     }
 
     addDependent = () => {

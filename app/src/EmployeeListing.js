@@ -1,6 +1,6 @@
 import React from 'react';
 import Employee from './Components/Employee';
-import { employeesUrl, fetchGet } from './Utilities/ApiService';
+import { employeesUrl, fetchDelete, fetchGet, fetchPost } from './Utilities/ApiService';
 import AddEmployeeModal from './Components/Modals/AddEmployeeModal';
 
 class EmployeeListing extends React.Component {
@@ -39,9 +39,28 @@ class EmployeeListing extends React.Component {
     }
  
     handleCloseAddModal = (reply) => {
-         this.setState({
+        if(reply) {
+            console.log(reply);
+            fetchPost(`${employeesUrl}`, reply)
+            .then((response) => {
+                var newEmployeeList = this.state.employees.concat(response.data);
+                this.setState({
+                    employees: newEmployeeList
+                })
+            })
+        }
+        this.setState({
             addOpen: false
-         });
+        });
+    }
+
+    handleDelete = (id) => {
+        fetchDelete(`${employeesUrl}/${id}`)
+        .then((response) => {
+            this.setState({
+                employees: response.data
+            })
+        })
     }
 
     render() {
@@ -68,10 +87,11 @@ class EmployeeListing extends React.Component {
                 id={id}
                 firstName={firstName}
                 lastName={lastName}
-                dateOfBirth={dateOfBirth.split("T")[0]}
+                dateOfBirth={dateOfBirth}
                 salary={salary}
                 dependents={dependents}
                 editModalId={this.state.addEmployeeModalId}
+                deleted={this.handleDelete}
                 />
                 ))}
             </tbody>
