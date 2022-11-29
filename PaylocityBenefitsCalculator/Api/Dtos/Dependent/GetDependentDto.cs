@@ -22,5 +22,7 @@ namespace Api.Dtos.Dependent
             DateOfBirth = dependent.DateOfBirth;
             Relationship = dependent.Relationship;
         }
+
+        public GetDependentDto() { }
     }
 }

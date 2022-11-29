@@ -15,7 +15,7 @@ namespace Api.Services
 
         public async Task<GetPaystubDto> GetPaystub(int id)
         {
-            return new GetPaystubDto(await _employeesService.GetEmployeeById(id)).SetBaseBenefits().SetDependentBenefits().SetHighwagePremium().SetSeniorPremium().CalculateNetWages();
+            return new GetPaystubDto(await _employeesService.GetEmployeeById(id));
         }
     }
 }

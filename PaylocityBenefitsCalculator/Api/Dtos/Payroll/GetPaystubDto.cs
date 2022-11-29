@@ -16,28 +16,35 @@ namespace Api.Dtos.Payroll
         public GetPaystubDto(GetEmployeeDto employee)
         {
             _employee = employee;
+            SetGrossWage();
+            SetBaseBenefits();
+            SetDependentBenefits();
+            SetHighwagePremium();
+            SetSeniorPremium();
+            CalculateNetWages();
+        }
+
+        internal void SetGrossWage()
+        {
             GrossWages = _employee.Salary / 26;
         }
 
-        public GetPaystubDto SetBaseBenefits()
+        internal void SetBaseBenefits()
         {
             BaseBenefits = ((decimal)1000 * 12) / 26;
-            return this;
         }
 
-        public GetPaystubDto SetDependentBenefits()
+        internal void SetDependentBenefits()
         {
             DependentBenefits = (_employee.Dependents.Count() * (decimal)600 * 12) / 26;
-            return this;
         }
 
-        public GetPaystubDto SetHighwagePremium()
+        internal void SetHighwagePremium()
         {
-            HighWagePremium = _employee.Salary > 80000 ? _employee.Salary * (decimal).02 / 26 : 0;
-            return this;
+            HighWagePremium = _employee.Salary > 80000 ? (_employee.Salary * (decimal).02) / 26 : 0;
         }
 
-        public GetPaystubDto SetSeniorPremium()
+        internal void SetSeniorPremium()
         {
             decimal seniorPremium = 0;
             foreach (GetDependentDto dependent in _employee.Dependents)
@@ -47,13 +54,11 @@ namespace Api.Dtos.Payroll
                 if (age > 50) { seniorPremium += ((decimal)200 * 12 / 26); }
             }
             SeniorPremium = seniorPremium;
-            return this;
         }
 
-        public GetPaystubDto CalculateNetWages()
+        internal void CalculateNetWages()
         {
             NetWages = GrossWages - BaseBenefits - DependentBenefits - HighWagePremium - SeniorPremium;
-            return this;
         }
 
     }

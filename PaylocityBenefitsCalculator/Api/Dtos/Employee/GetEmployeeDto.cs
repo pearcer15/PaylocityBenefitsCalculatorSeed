@@ -24,5 +24,7 @@ namespace Api.Dtos.Employee
             DateOfBirth = employee.DateOfBirth;
             Dependents = employee.Dependents.Select(d => new GetDependentDto(d)).ToList();
         }
+
+        public GetEmployeeDto() { }
     }
 }
