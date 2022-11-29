@@ -49,11 +49,11 @@ namespace Api.Controllers
 
         [SwaggerOperation(Summary = "Add dependent")]
         [HttpPost]
-        public async Task<ActionResult<ApiResponse<List<AddDependentWithEmployeeIdDto>>>> AddDependent(AddDependentWithEmployeeIdDto newDependent)
+        public async Task<ActionResult<ApiResponse<List<GetDependentDto>>>> AddDependent(AddDependentWithEmployeeIdDto newDependent)
         {
-            IEnumerable<AddDependentWithEmployeeIdDto> dependents = await _dependentsService.AddDependent(newDependent);
+            IEnumerable<GetDependentDto> dependents = await _dependentsService.AddDependent(newDependent);
 
-            var result = new ApiResponse<List<AddDependentWithEmployeeIdDto>>
+            var result = new ApiResponse<List<GetDependentDto>>
             {
                 Data = dependents.ToList(),
                 Success = true

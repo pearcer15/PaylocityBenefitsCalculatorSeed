@@ -35,9 +35,8 @@ class AddEmployeeModal extends React.Component {
             console.log(reply);
             fetchPost(`${dependentsUrl}`, reply)
             .then((response) => {
-                var newDependentsList = this.state.dependents?.length > 0 ? this.state.employees.concat(response.data[0]) : [response.data[0]];
                 this.setState({
-                    dependents: newDependentsList
+                    dependents: response.data
                 })
             })
         }

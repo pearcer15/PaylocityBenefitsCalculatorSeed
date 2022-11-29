@@ -25,14 +25,15 @@ namespace Api.Services
             return dependents.Select(d => new GetDependentDto(d));
         }
 
-        public async Task<IEnumerable<AddDependentWithEmployeeIdDto>> AddDependent(AddDependentWithEmployeeIdDto dependent)
+        public async Task<IEnumerable<GetDependentDto>> AddDependent(AddDependentWithEmployeeIdDto dependent)
         {
             if (await DependentRelationshipAllowed(dependent.Relationship, dependent.EmployeeId))
             {
                 int newId = await _dependentsRepository.GetNewDependentId();
                 if (await _dependentsRepository.AddDependent(new Dependent(dependent, newId)))
                 {
-                    return new List<AddDependentWithEmployeeIdDto> { dependent };
+                    IEnumerable<Dependent> dependents = await GetDependentsByEmployeeId(dependent.EmployeeId);
+                    return dependents.Select(d => new GetDependentDto(d));
                 }
                 else
                 {

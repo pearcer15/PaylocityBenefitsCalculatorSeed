@@ -52,11 +52,11 @@ namespace Api.Controllers
 
         [SwaggerOperation(Summary = "Add employee")]
         [HttpPost]
-        public async Task<ActionResult<ApiResponse<List<AddEmployeeDto>>>> AddEmployee(AddEmployeeDto newEmployee)
+        public async Task<ActionResult<ApiResponse<List<GetEmployeeDto>>>> AddEmployee(AddEmployeeDto newEmployee)
         {
-            IEnumerable<AddEmployeeDto> employees = await _employeesService.AddEmployee(newEmployee);
+            IEnumerable<GetEmployeeDto> employees = await _employeesService.AddEmployee(newEmployee);
 
-            var result = new ApiResponse<List<AddEmployeeDto>>
+            var result = new ApiResponse<List<GetEmployeeDto>>
             {
                 Data = employees.ToList(),
                 Success = true

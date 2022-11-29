@@ -32,7 +32,7 @@ namespace Api.Services
             return employees.Select(e => new GetEmployeeDto(e));
         }
 
-        public async Task<IEnumerable<AddEmployeeDto>> AddEmployee(AddEmployeeDto employee)
+        public async Task<IEnumerable<GetEmployeeDto>> AddEmployee(AddEmployeeDto employee)
         {
             int newId = await _employeesRepository.GetNewEmployeeId();
             if (employee.Dependents != null && employee.Dependents.Count > 0)
@@ -44,7 +44,7 @@ namespace Api.Services
             }
             if (await _employeesRepository.AddEmployee(new Employee(employee, newId)))
             {
-                return new List<AddEmployeeDto> { employee };
+                return new List<GetEmployeeDto> { new GetEmployeeDto(employee, newId) };
             }
             else
             {
