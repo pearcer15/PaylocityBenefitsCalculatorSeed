@@ -68,6 +68,14 @@ namespace ApiTests
         }
 
         [Fact]
+        public void Paystub_Highwage_No_80000()
+        {
+            GetPaystubDto response = new GetPaystubDto(Employee4);
+
+            Assert.True(0 == response.HighWagePremium);
+        }
+
+        [Fact]
         public void Paystub_Highwage_100000()
         {
             GetPaystubDto response = new GetPaystubDto(Employee2);
@@ -204,7 +212,7 @@ namespace ApiTests
             Id = 1,
             FirstName = "HighSalary",
             LastName = "ThreeDependents",
-            Salary = 130000,
+            Salary = 80000,
             DateOfBirth = new DateTime(1950, 12, 30),
             Dependents = new List<GetDependentDto>()
             {
