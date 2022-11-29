@@ -116,7 +116,7 @@ class AddEmployeeModal extends React.Component {
                     id={id}
                     firstName={firstName}
                     lastName={lastName}
-                    dateOfBirth={dateOfBirth}
+                    dateOfBirth={dateOfBirth.split("T")[0]}
                     relationship={relationship}
                     />
                     ))}
@@ -129,7 +129,8 @@ class AddEmployeeModal extends React.Component {
                 IsModalOpen={this.state.addOpen}
                 onCloseModal={this.handleCloseAddModal}
             />
-            <button type="button" className="btn btn-primary" onClick={this.openAddModal}>Add Dependent</button>
+            {/* Disabling the add Dependent button if we don't have an employee id yet */}
+            <button disabled={!this.props.editMode} type="button" className="btn btn-primary" onClick={this.openAddModal}>Add Dependent</button>
             </form>
             </div>
             <div className="modal-footer">

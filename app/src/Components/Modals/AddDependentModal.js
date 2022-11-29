@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { dependentsUrl, fetchPost, fetchPut } from '../../Utilities/ApiService';
+import { AddDependent, dependentsUrl, fetchPost, fetchPut } from '../../Utilities/ApiService';
 
 class AddDependentModal extends React.Component {
     constructor(props) {
@@ -8,7 +8,7 @@ class AddDependentModal extends React.Component {
         this.state = {
             firstName: this.props.data.firstName || '',
             lastName: this.props.data.lastName || '',
-            dateOfBirth: this.props.data.dateOfBirth || null,
+            dateOfBirth: this.props.data.dateOfBirth || '2000-01-01',
             relationship: this.props.data.relationship || 1
         }
     }
@@ -16,39 +16,48 @@ class AddDependentModal extends React.Component {
     onModalClose = (event) => {
         this.props.onCloseModal(event);
     }
+
     handleChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
-        })
+        });
      }
-     handleSubmit = () =>  {
+
+    handleSubmit = () =>  {
         if(this.props.editMode) {
-            fetchPut(`${dependentsUrl}/${this.props.data.id}`, this.editDependent());
+            fetchPut(`${dependentsUrl}/${this.props.data.id}`, this.editDependent())
+            .then((response) => {
+                if (response.success) {
+                    console.log(response.data);
+            }});
         } else{
-            fetchPost(`${dependentsUrl}`, this.addDependent());
+            fetchPost(`${dependentsUrl}`, this.addDependent())
+            .then((response) => {
+                if (response.success) {
+                    console.log(response.data);
+            }});
         }
         this.props.onCloseModal(true);
-     }
+    }
 
-     addDependent = () => {
+    addDependent = () => {
         return {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             dateOfBirth: this.state.dateOfBirth,
-            relationship: this.state.relationship,
-            employeeId: this.props.EmployeeId,
+            relationship: Number(this.state.relationship),
+            employeeId: this.props.employeeId,
         };
-     }
+    }
 
-     editDependent = () => {
+    editDependent = () => {
         return {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             dateOfBirth: this.state.dateOfBirth,
-            relationship: this.state.relationship,
-        }
- }
-
+            relationship: Number(this.state.relationship),
+        };
+    }
 
     render() {
     return (

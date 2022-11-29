@@ -38,10 +38,10 @@ class EmployeeListing extends React.Component {
         });
     }
  
-    handleCloseAddModal = () => {
+    handleCloseAddModal = (reply) => {
          this.setState({
-             addOpen: false
-         })
+            addOpen: false
+         });
     }
 
     render() {
@@ -68,7 +68,7 @@ class EmployeeListing extends React.Component {
                 id={id}
                 firstName={firstName}
                 lastName={lastName}
-                dateOfBirth={dateOfBirth}
+                dateOfBirth={dateOfBirth.split("T")[0]}
                 salary={salary}
                 dependents={dependents}
                 editModalId={this.state.addEmployeeModalId}
