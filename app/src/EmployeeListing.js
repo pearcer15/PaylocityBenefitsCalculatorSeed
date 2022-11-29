@@ -1,6 +1,6 @@
 import React from 'react';
 import Employee from './Components/Employee';
-import { getEmployees } from './Utilities/ApiService';
+import { employeesUrl, fetchGet } from './Utilities/ApiService';
 import AddEmployeeModal from './Components/Modals/AddEmployeeModal';
 
 class EmployeeListing extends React.Component {
@@ -16,7 +16,7 @@ class EmployeeListing extends React.Component {
         this.getEmployees();
     }
     getEmployees = () => {
-        getEmployees()
+        fetchGet(`${employeesUrl}`)
         .then((response) => {
         if (response.success) {
             this.setState({

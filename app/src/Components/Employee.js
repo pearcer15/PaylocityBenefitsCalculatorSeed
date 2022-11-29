@@ -1,8 +1,9 @@
 import React from "react";
 import { currencyFormat } from "../Utilities/Constants";
-import { deleteRecord } from "../Utilities/ApiService";
+import { employeesUrl, fetchDelete, fetchGet } from "../Utilities/ApiService";
 import AddEmployeeModal from "./Modals/AddEmployeeModal";
 import DeleteModal from "./Modals/DeleteModal";
+import PaycheckModal from "./Modals/PaycheckModal";
 
 class Employee extends React.Component {
     constructor(props) {
@@ -10,11 +11,34 @@ class Employee extends React.Component {
         this.state = {
             editOpen: false,
             deleteOpen: false,
+            paycheckOpen: false,
+            paycheck: [],
         };
         this.firstName = this.props.firstName || '';
         this.lastName = this.props.lastName || '';
-        this.salary = this.props.salary || 0;    
+        this.salary = this.props.salary || 0;
+  
     }
+
+    openPaycheckModal = () => {
+        fetchGet(`${employeesUrl}/${this.props.id}/Paystub`)
+        .then((response) => {
+            if (response.success) {
+                this.setState({
+                    paycheck: response.data,
+                    paycheckOpen: true
+                })
+            }
+        })
+            
+     }
+ 
+     handleClosePaycheckModal = () => {
+         this.setState({
+            paycheckOpen: false
+         })
+     } 
+
     openEditModal = () => {
        this.setState({
         editOpen: true
@@ -38,7 +62,7 @@ class Employee extends React.Component {
             deleteOpen: false
         })
         if(completeDelete){
-            deleteRecord(true, this.props.id);
+            fetchDelete(`${employeesUrl}/${this.props.id}`);
         }
     }
     
@@ -51,7 +75,12 @@ class Employee extends React.Component {
             <td>{this.props.dateOfBirth}</td>
             <td>
                 {currencyFormat(this.salary)}
-
+                <PaycheckModal
+                data={this.state.paycheck}
+                IsModalOpen={this.state.paycheckOpen}
+                onCloseModal={this.handleClosePaycheckModal}
+                />
+                <button type="button" className="btn btn-primary" onClick={this.openPaycheckModal}>View Paystub</button>
             </td>
             <td>{this.props.dependents?.length || 0}</td>
             <td>

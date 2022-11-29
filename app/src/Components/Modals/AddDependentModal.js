@@ -1,6 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
-import { addRecord, editRecord } from '../../Utilities/ApiService';
+import { dependentsUrl, fetchPost, fetchPut } from '../../Utilities/ApiService';
 
 class AddDependentModal extends React.Component {
     constructor(props) {
@@ -9,7 +9,7 @@ class AddDependentModal extends React.Component {
             firstName: this.props.data.firstName || '',
             lastName: this.props.data.lastName || '',
             dateOfBirth: this.props.data.dateOfBirth || null,
-            relationship: this.props.data.relationship || null
+            relationship: this.props.data.relationship || 1
         }
     }
 
@@ -23,9 +23,9 @@ class AddDependentModal extends React.Component {
      }
      handleSubmit = () =>  {
         if(this.props.editMode) {
-            editRecord(false, this.editDependent());
+            fetchPut(`${dependentsUrl}/${this.props.data.id}`, this.editDependent());
         } else{
-            addRecord(false, this.addDependent());
+            fetchPost(`${dependentsUrl}`, this.addDependent());
         }
         this.props.onCloseModal(true);
      }
@@ -42,7 +42,6 @@ class AddDependentModal extends React.Component {
 
      editDependent = () => {
         return {
-            id: this.props.data.id,
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             dateOfBirth: this.state.dateOfBirth,

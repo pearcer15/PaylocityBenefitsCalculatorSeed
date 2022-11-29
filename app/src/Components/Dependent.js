@@ -2,7 +2,7 @@ import React from 'react';
 import AddDependentModal from './Modals/AddDependentModal';
 import DeleteModal from "./Modals/DeleteModal";
 import { relationshipFormat } from '../Utilities/Constants';
-import { deleteRecord } from "../Utilities/ApiService";
+import { dependentsUrl, fetchDelete } from "../Utilities/ApiService";
 
 class Dependent extends React.Component {
     constructor(props) {
@@ -39,7 +39,7 @@ class Dependent extends React.Component {
             deleteOpen: false
         })
         if(completeDelete){
-            deleteRecord(false, this.props.id);
+            fetchDelete(`${dependentsUrl}/${this.props.id}`);
         }
 
      } 

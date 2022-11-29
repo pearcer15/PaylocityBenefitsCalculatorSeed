@@ -2,55 +2,45 @@ export const baseUrl = 'https://localhost:7124';
 export const employeesUrl = '/api/v1/Employees';
 export const dependentsUrl = '/api/v1/Dependents';
 
-// why did i make this all so specific? come back and fix this
-export const getEmployees = () => {
-    return fetch(`${baseUrl}${employeesUrl}`)
+export const fetchGet = (url) => {
+    return fetch(`${baseUrl}${url}`)
     .then((raw) => {return raw.json()})
 }
 
-export const deleteRecord = (isEmployee, id) => {
-    fetch(`${baseUrl}${isEmployee ? employeesUrl : dependentsUrl}/${id}`,
+export const fetchDelete = (url) => {
+    return fetch(`${baseUrl}${url}`,
     {
         headers: {
             "Access-Control-Allow-Methods": 'DELETE'
         }, 
         method: 'DELETE'
     })
-    .then((raw) => raw.json())
-    .then((response) => {
-        return response;
-    })
+    .then((raw) => {return raw.json()})
 }
 
-export const addRecord = (isEmployee, newRecord) => {
-    fetch(`${baseUrl}${isEmployee ? employeesUrl : dependentsUrl}`,
+export const fetchPost = (url, request) => {
+    return fetch(`${baseUrl}${url}`,
     {
         headers: {
             'Content-Type': 'application/json',
             "Access-Control-Allow-Methods": 'POST'
         }, 
         method: 'POST',
-        body: JSON.stringify(newRecord),
+        body: JSON.stringify(request),
     })
-    .then((raw) => raw.json())
-    .then((response) => {
-        return response;
-    })
+    .then((raw) => {return raw.json()})
 }
 
-export const editRecord = (isEmployee, updateRecord) => {
-    fetch(`${baseUrl}${isEmployee ? employeesUrl : dependentsUrl}/${updateRecord.id}`,
+export const fetchPut = (url, request) => {
+    return fetch(`${baseUrl}${url}`,
     {
         headers: {
             'Content-Type': 'application/json',
             "Access-Control-Allow-Methods": 'PUT'
         }, 
         method: 'PUT',
-        body: JSON.stringify(updateRecord),
+        body: JSON.stringify(request),
     })
-    .then((raw) => raw.json())
-    .then((response) => {
-        return response;
-    })
+    .then((raw) => { return raw.json() })
 }
 

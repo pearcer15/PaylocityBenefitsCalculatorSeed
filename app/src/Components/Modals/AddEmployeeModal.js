@@ -3,7 +3,7 @@ import AddDependentModal from './AddDependentModal';
 import Modal from 'react-modal';
 import React from 'react';
 import { currencyFormat } from '../../Utilities/Constants';
-import { addRecord, editRecord } from '../../Utilities/ApiService';
+import { employeesUrl, fetchPost, fetchPut } from '../../Utilities/ApiService';
 
 class AddEmployeeModal extends React.Component {
     constructor(props) {
@@ -44,9 +44,9 @@ class AddEmployeeModal extends React.Component {
 
      handleSubmit = () =>  {
         if(this.props.editMode) {
-            editRecord(true, this.editEmployee());
+            fetchPut(`${employeesUrl}/${this.props.data.id}`, this.editEmployee());
         } else{
-            addRecord(true, this.addEmployee());
+            fetchPost(`${employeesUrl}`, this.addEmployee());
         }
         this.props.onCloseModal(true);
      }
@@ -63,7 +63,6 @@ class AddEmployeeModal extends React.Component {
 
      editEmployee = () => {
         return {
-            id: this.props.data.id,
             firstName: this.state.firstName,
             lastName: this.state.lastName,
             salary: this.state.salary
